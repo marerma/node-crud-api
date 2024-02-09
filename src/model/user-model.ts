@@ -5,9 +5,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { ErrorMessages } from '../services/Error-messages';
 import { User, NewUser } from '../data/users.types';
+import { getAppStatus } from '../services/config';
+
+const {isMultiMode} = getAppStatus();
 
 export const findUsers = async (): Promise<User[]> => {
-  return new Promise((resolve) => resolve(USERS_DATA.users));
+  return new Promise((resolve) => {
+    resolve(USERS_DATA.users);
+    if (isMultiMode) {
+      process.send(USERS_DATA)
+    }
+  });
 };
 
 export const findUserById = async (
@@ -23,6 +31,9 @@ export const findUserById = async (
 
     if (!user) {
       reject(new CustomError(STATUS_CODES.NOT_FOUND, ErrorMessages.NO_USER));
+    }
+    if (isMultiMode) {
+      process.send(USERS_DATA)
     }
     resolve(user);
   });
@@ -40,6 +51,9 @@ export const createUser = async (
     const id = uuidv4();
     const newUser = { ...user, id };
     USERS_DATA.users.push(newUser);
+    if (isMultiMode) {
+      process.send(USERS_DATA)
+    }
     resolve(newUser);
   });
 };
@@ -63,6 +77,9 @@ export const updateUser = async (
 
     const updatedUser = { id: USERS_DATA.users[currentUserInd].id, ...newData };
     USERS_DATA.users[currentUserInd] = updatedUser;
+    if (isMultiMode) {
+      process.send(USERS_DATA)
+    }
     resolve(updatedUser);
   });
 };
@@ -80,6 +97,9 @@ export const deleteUser = async (id: string): Promise<void | CustomError> => {
       reject(new CustomError(STATUS_CODES.NOT_FOUND, ErrorMessages.NO_USER));
     }
     USERS_DATA.users.splice(currentUserInd, 1);
+    if (isMultiMode) {
+      process.send(USERS_DATA)
+    }
     resolve();
   });
 };
