@@ -3,7 +3,7 @@ import { updateUser } from '../model/user-model';
 import { CustomError } from '../services/Custom-error.service';
 import { STATUS_CODES } from '../services/Status-errors';
 import { validateUserData } from '../utils/validate-user-data';
-import { notValidBodyHandler } from './utils';
+import { notValidBodyHandler, serverErrorHandler } from './utils';
 
 export const putUser = async (
   res: ServerResponse<IncomingMessage>,
@@ -23,5 +23,6 @@ export const putUser = async (
       res.writeHead(err.statusCode, { 'Content-Type': 'application/json' });
       res.end(err.message);
     }
+    serverErrorHandler(res);
   }
 };

@@ -2,6 +2,7 @@ import { CustomError } from '../services/Custom-error.service';
 import { STATUS_CODES } from '../services/Status-errors';
 import { IncomingMessage, ServerResponse } from 'http';
 import { deleteUser } from '../model/user-model';
+import { serverErrorHandler } from './utils';
 
 export const removeUser = async (
   req: IncomingMessage,
@@ -17,5 +18,6 @@ export const removeUser = async (
       res.statusCode = err.statusCode;
       res.end(err.message);
     }
+    serverErrorHandler(res);
   }
 };

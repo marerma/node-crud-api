@@ -3,7 +3,7 @@ import { createUser } from '../model/user-model';
 import { CustomError } from '../services/Custom-error.service';
 import { STATUS_CODES } from '../services/Status-errors';
 import { validateUserData } from '../utils/validate-user-data';
-import { notValidBodyHandler } from './utils';
+import { notValidBodyHandler, serverErrorHandler } from './utils';
 
 export const postUser = async (
   res: ServerResponse<IncomingMessage>,
@@ -22,5 +22,6 @@ export const postUser = async (
       res.statusCode = err.statusCode;
       res.end(err.message);
     }
+    serverErrorHandler(res);
   }
 };

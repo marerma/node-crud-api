@@ -2,6 +2,7 @@ import { CustomError } from '../services/Custom-error.service';
 import { STATUS_CODES } from '../services/Status-errors';
 import { IncomingMessage, ServerResponse } from 'http';
 import { findUserById, findUsers } from '../model/user-model';
+import { serverErrorHandler } from './utils';
 
 export const getUserList = async (res: ServerResponse<IncomingMessage>) => {
   try {
@@ -13,6 +14,7 @@ export const getUserList = async (res: ServerResponse<IncomingMessage>) => {
       res.statusCode = err.statusCode;
       res.end(err.message);
     }
+    serverErrorHandler(res);
   }
 };
 
@@ -29,5 +31,6 @@ export const getUserById = async (
       res.statusCode = err.statusCode;
       res.end(err.message);
     }
+    serverErrorHandler(res);
   }
 };
