@@ -1,7 +1,7 @@
 {
   "name": "node-crud-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "simple crud api on node.js and scaling via clusterization",
   "main": "src/index.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --watch src/index.ts",
